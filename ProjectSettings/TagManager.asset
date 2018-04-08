@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Enemy
+  - SprintPickUp
+  - Spheretta
+  - MocapEnemy
+  - Dead
+  - TeleportStage1
+  - TeleportStage2
+  - TeleportStage3
+  - Fire
+  - AmmoShotgunPickUp
+  - AmmoGunPickUp
+  - AmmoFrizzyPickUp
+  - AmmoRiflePickUp
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - WeaponHolder
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
