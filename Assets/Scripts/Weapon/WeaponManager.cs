@@ -89,8 +89,7 @@ namespace FPSDemo.Scripts.Weapons
             isSwitching = false;
         }
 
-        // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
 
             if (Input.GetAxis("Mouse ScrollWheel") > 0 && !isSwitching)

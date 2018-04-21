@@ -23,10 +23,10 @@ namespace FPSDemo.Scripts.Weapons
             audio.PlayOneShot(pumpUpSound);
         }
 
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             shotInput = Input.GetButtonDown("Fire");
-            base.Update();
+            base.FixedUpdate();
 
         }
 

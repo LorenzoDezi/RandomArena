@@ -10,10 +10,10 @@ namespace FPSDemo.Scripts.Weapons
 {
     public class Gun : Weapon
     {
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             shotInput = Input.GetButtonDown("Fire");
-            base.Update();
+            base.FixedUpdate();
         }
 
         public override void Fire()

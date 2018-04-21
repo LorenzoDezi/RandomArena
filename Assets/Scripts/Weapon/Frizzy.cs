@@ -92,7 +92,7 @@ namespace FPSDemo.Scripts.Weapons
             this.UpdateUI();
         }
 
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             shotInput = Input.GetButton("Fire");
             anim.SetBool("Fire", shotInput);

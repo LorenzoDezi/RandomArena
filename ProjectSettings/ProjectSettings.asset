@@ -11,9 +11,9 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: FPS Demo
-  defaultCursor: {fileID: 0}
+  companyName: IPezzi
+  productName: RandomFPS
+  defaultCursor: {fileID: 2800000, guid: b0fb413edb2f88549b98363fd8f2c0bf, type: 3}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
   m_ShowUnitySplashScreen: 1
@@ -643,7 +643,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
-    Collab: 1
+    Collab: 0
     UNet: 1
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 2

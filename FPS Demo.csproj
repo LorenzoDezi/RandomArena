@@ -366,6 +366,8 @@
     <Compile Include="Assets\Scripts\Enemy\Zombie\ZombieAttack.cs" />
     <Compile Include="Assets\Scripts\Enemy\Zombie\ZombieHealth.cs" />
     <Compile Include="Assets\Scripts\Enemy\Zombie\ZombieMovement.cs" />
+    <Compile Include="Assets\Scripts\GUI\MenuSceneInteractionFunctions.cs" />
+    <Compile Include="Assets\Scripts\GUI\PauseMenuLogic.cs" />
     <Compile Include="Assets\Scripts\Manager\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Manager\PickUpManager.cs" />
     <Compile Include="Assets\Scripts\Manager\ScoreManager.cs" />

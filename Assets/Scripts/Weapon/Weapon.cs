@@ -104,8 +104,14 @@ namespace FPSDemo.Scripts.Weapons
         }
 
 
-        protected virtual void Update()
+        protected virtual void FixedUpdate()
         {
+            //Checking animator infos
+            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+            isReloading = info.IsName("Reload");
+            isShooting = info.IsName("Fire");
+            isFuckingAround = info.IsName("FuckingAround");
+
             //You want to shoot
             if (shotInput)
             {
@@ -165,14 +171,6 @@ namespace FPSDemo.Scripts.Weapons
                 isFuckingAroundAtSomeone = true;
             }
 
-        }
-
-        protected void FixedUpdate()
-        {
-            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-            isReloading = info.IsName("Reload");
-            isShooting = info.IsName("Fire");
-            isFuckingAround = info.IsName("FuckingAround");
         }
 
         /// <summary>

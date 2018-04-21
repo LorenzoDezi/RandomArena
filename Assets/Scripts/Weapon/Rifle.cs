@@ -55,10 +55,10 @@ namespace FPSDemo.Scripts.Weapons
             base.Fire();
         }
 
-        protected override void Update()
+        protected override void FixedUpdate()
         {
             shotInput = Input.GetButton("Fire");
-            base.Update();
+            base.FixedUpdate();
             if (fireTimer < fireRate)
             {
                 fireTimer += Time.deltaTime;

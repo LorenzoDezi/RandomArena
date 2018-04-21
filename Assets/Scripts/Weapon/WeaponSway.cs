@@ -38,7 +38,7 @@ namespace FPSDemo.Scripts.Weapons
             player = this.GetComponentInParent<CharacterController>();
         }
 
-        void Update()
+        void FixedUpdate()
         {
                 float movementX = Input.GetAxis("Mouse X") * amount;
                 float movementY = Input.GetAxis("Mouse Y") * amount;
