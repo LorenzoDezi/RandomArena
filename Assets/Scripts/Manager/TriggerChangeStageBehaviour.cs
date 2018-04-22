@@ -8,6 +8,9 @@ public class TriggerChangeStageBehaviour : MonoBehaviour {
     [SerializeField]
     int stageIndex = 0;
 
+    [SerializeField]
+    private Animation doorAnimation;
+
     private Collider collider;
 
 	void Start () {
@@ -20,6 +23,8 @@ public class TriggerChangeStageBehaviour : MonoBehaviour {
         {
             LevelManager.Manager.ActivateTeleportsWithStageIndex(stageIndex);
             SoundtrackManager.Manager.ChangeAmbientMusic();
+            PickUpManager.manager.ResetSpawnedPickUp();
+            doorAnimation.Play("DoorClose");
             Destroy(this.gameObject, 1f);
         }
     }

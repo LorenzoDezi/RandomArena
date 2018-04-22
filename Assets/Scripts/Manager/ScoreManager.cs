@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using System;
+using FPSDemo.Scripts.Enemy;
 
 namespace FPSDemo.Scripts.Manager
 {
@@ -101,15 +102,29 @@ namespace FPSDemo.Scripts.Manager
 
         }
 
-        public void ScoreIncrease(int score)
+        public void ScoreIncrease(object source, EnemyDeadEventArgs args)
         {
-            ScoreManager.manager.score += score;
+            ScoreManager.manager.enemyKilled++;
+            ScoreManager.manager.score += args.ScoreValue;
+            UpdateUI(args.ScoreValue);
+        }
+
+        public void ScoreIncrease(int scoreToIncrease)
+        {
+            ScoreManager.manager.score += scoreToIncrease;
+            UpdateUI(scoreToIncrease);
+        }
+
+        private void UpdateUI(int score)
+        {
             int messagesIndex = Convert.ToInt32(scoreSlider.value / scoreSlider.maxValue * 3f);
             scoreMsgText.text = scoreMessages[messagesIndex, UnityEngine.Random.Range(0, 4)];
             if (scoreSlider.value <= scoreSlider.maxValue - score)
                 scoreSlider.value += score;
             anim.SetTrigger("ScoreIncrease");
         }
+
+        
     }
 }
 

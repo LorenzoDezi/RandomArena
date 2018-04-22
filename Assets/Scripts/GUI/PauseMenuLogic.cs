@@ -45,7 +45,6 @@ namespace FPSDemo.Scripts.UI
             Cursor.visible = isPaused = false;
             controller.enabled = true;
             Cursor.lockState = CursorLockMode.Locked;
-
         }
 
         public void Pause()

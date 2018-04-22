@@ -17,9 +17,17 @@ namespace FPSDemo.Scripts.PickUps
             set { pickupManagerIndexTracker = value; }
         }
 
-        public PickUpEventArgs(int indexTracker)
+        private string pickUpTag;
+        public string PickUpTag
+        {
+            get { return pickUpTag; }
+            set { pickUpTag = value; }
+        }
+
+        public PickUpEventArgs(int indexTracker, string tag)
         {
             this.pickupManagerIndexTracker = indexTracker;
+            this.pickUpTag = tag;
         }
     }
 
@@ -29,7 +37,7 @@ namespace FPSDemo.Scripts.PickUps
         Transform childrenTransform;
 
         [HideInInspector]
-        public int ManagerIndexTracker;
+        public int ManagerIndexTracker = -1;
 
         public delegate void PickUpEventHandler(object sender, PickUpEventArgs args);
 
@@ -52,7 +60,8 @@ namespace FPSDemo.Scripts.PickUps
 
         public void RaisePickUpEvent()
         {
-            PickUpEvent.Invoke(new object(), new PickUpEventArgs(this.ManagerIndexTracker));
+            PickUpEvent.Invoke(new object(), new PickUpEventArgs(this.ManagerIndexTracker,
+                this.gameObject.tag));
         }
     }
 

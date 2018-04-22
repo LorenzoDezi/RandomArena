@@ -6,6 +6,7 @@ using FPSDemo.Scripts.Enemy;
 using System;
 using FPSDemo.Scripts.PickUps;
 using UnityEngine.AI;
+using FPSDemo.Scripts.Player;
 
 namespace FPSDemo.Scripts.Manager
 {
@@ -33,6 +34,19 @@ namespace FPSDemo.Scripts.Manager
         GameObject zapAmmoPrefab;
 
         /// <summary>
+        /// Health pickUp prefab to spawn
+        /// </summary>
+        [SerializeField]
+        GameObject healthPickUpPrefab;
+        bool isHealthSpawned = false;
+
+        /// <summary>
+        /// Player health controller, to detect current health
+        /// </summary>
+        [SerializeField]
+        HealthController healthController;
+
+        /// <summary>
         /// Current active enemy teleports
         /// </summary>
         EnemyTeleport[] currentTeleports;
@@ -40,13 +54,15 @@ namespace FPSDemo.Scripts.Manager
 
 
         /// <summary>
-        /// This weapon  is spawned near enemySpawn after a certain time
+        /// This weapon  is spawned near enemySpawn after a certain time,
+        /// and only if it is not already spawned
         /// </summary>
         [SerializeField]
         Weapon zapGun;
         [SerializeField]
         float timeToSpawn = 20f;
         float Timer;
+        bool isZapSpawned = false;
 
         /// <summary>
         /// The distance at which ammo pickups are spawn
@@ -71,12 +87,19 @@ namespace FPSDemo.Scripts.Manager
         [SerializeField]
         GameObject Player;
 
-        
-        
         public void OnPickUp(object sender, PickUpEventArgs args)
         {
             int pickUpIndex = args.PickUpManagerIndexTracker;
-            spawned[pickUpIndex] = false;
+            if(pickUpIndex != -1)
+            {
+                spawned[pickUpIndex] = false;
+            } else
+            {
+                if (args.PickUpTag == "HealthTag")
+                    isHealthSpawned = false;
+                else if (args.PickUpTag == "AmmoFrizzyPickUp")
+                    isZapSpawned = false;
+            }
         }
 
         void Awake()
@@ -107,7 +130,6 @@ namespace FPSDemo.Scripts.Manager
         {
             //Get current active teleports
             currentTeleports = LevelManager.Manager.GetActiveTeleports();
-
         }
 
         void Update()
@@ -136,8 +158,10 @@ namespace FPSDemo.Scripts.Manager
         private void RandomSpawnNormal()
         {
             //Spawn a random pickup between the available weapons
-            int pickUpChosenIndex = UnityEngine.Random.Range(0, normalAmmoPrefabs.Length);
-            Vector3 spawnPosition = Player.transform.position + new Vector3(UnityEngine.Random.Range(-1, 1),
+            int pickUpChosenIndex = UnityEngine.Random.Range(0, 
+                normalAmmoPrefabs.Length);
+            Vector3 spawnPosition = 
+                Player.transform.position + new Vector3(UnityEngine.Random.Range(-1, 1),
                 0f,
                 UnityEngine.Random.Range(-1, 1)) * distanceFromPlayer;
 
@@ -159,15 +183,20 @@ namespace FPSDemo.Scripts.Manager
 
         private void RandomSpawnZap()
         {
+            if(!isZapSpawned)
+            {
+                int randomTeleportChosenIndex = UnityEngine.Random.Range(0, currentTeleports.Length);
+                GameObject ammoSpawned = GameObject.Instantiate(
+                    zapAmmoPrefab,
+                    currentTeleports[randomTeleportChosenIndex].transform.position
+                    + new Vector3(0, 1.5f, 0),
+                    Quaternion.identity);
+                //One index more of the normalAmmoPrefabs length
+                ammoSpawned.GetComponent<PickUp>().ManagerIndexTracker =-1;
+                isZapSpawned = true;
+            }
             //Spawn zap at a random position between enemy spawn points
-            int randomTeleportChosenIndex = UnityEngine.Random.Range(0, currentTeleports.Length);
-            GameObject ammoSpawned = GameObject.Instantiate(
-                zapAmmoPrefab,
-                currentTeleports[randomTeleportChosenIndex].transform.position 
-                + new Vector3(0,1.5f,0),
-                Quaternion.identity);
-            //One index more of the normalAmmoPrefabs length
-            ammoSpawned.GetComponent<PickUp>().ManagerIndexTracker = normalAmmoPrefabs.Length;
+
         }
 
         /// <summary>
@@ -178,6 +207,47 @@ namespace FPSDemo.Scripts.Manager
         public void SetActiveTeleports(EnemyTeleport[] teleports)
         {
             this.currentTeleports = teleports;
+        }
+
+        /// <summary>
+        /// Method which subscribes to each enemy death in the level
+        /// </summary>
+        /// <param name="source">The object source</param>
+        /// <param name="args"></param>
+        public void OnEnemyDeath(object source, EnemyDeadEventArgs args)
+        {
+            if(UnityEngine.Random.value <= 
+                Math.Abs(healthController.startingHealth / healthController.currentHealth - 1.0f)
+                && !isHealthSpawned)
+            {
+                this.SpawnHealthAtPosition(args.DeathPosition);
+                isHealthSpawned = true;
+            }
+        }
+
+        /// <summary>
+        /// Spawn health at the parameter position.
+        /// </summary>
+        /// <param name="position">The position where the pickUp will be spawned</param>
+        public void SpawnHealthAtPosition(Vector3 position)
+        {
+            GameObject.Instantiate(healthPickUpPrefab,
+                    position + new Vector3(0, 1, 0),
+                    Quaternion.identity);
+        }
+
+        /// <summary>
+        /// Reset all spawned flag for ammo. Used when level changes to avoid
+        /// lost ammo in the previous stage
+        /// </summary>
+        public void ResetSpawnedPickUp()
+        {
+            for(int i=0; i < spawned.Length; i++)
+            {
+                spawned[i] = false;
+            }
+            isHealthSpawned = false;
+            isZapSpawned = false;
         }
     }
 

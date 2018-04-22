@@ -115,12 +115,17 @@ namespace FPSDemo.Scripts.Manager
             //Hardcoding door animations
             if (CurrentStage == 2)
             {
-
+                Vector3 healthSpawnPosition = doorAnimations[0].transform.position;
+                healthSpawnPosition.y = 0;
+                PickUpManager.manager.SpawnHealthAtPosition(healthSpawnPosition);
                 doorAnimations[0].Play();
                 this.NavMeshIndex =  NavMesh.GetAreaFromName("Phase2");
             }
             else if (CurrentStage == 3)
             {
+                Vector3 healthSpawnPosition = doorAnimations[1].transform.position;
+                healthSpawnPosition.y = 0;
+                PickUpManager.manager.SpawnHealthAtPosition(healthSpawnPosition);
                 doorAnimations[1].Play();
                 this.NavMeshIndex = NavMesh.GetAreaFromName("Phase3");
             }

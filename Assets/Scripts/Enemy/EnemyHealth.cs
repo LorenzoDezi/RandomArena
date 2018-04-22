@@ -35,8 +35,9 @@ namespace FPSDemo.Scripts.Enemy
         protected new Collider collider;
         protected bool isDead = false;
         protected bool isSinking;
-        
 
+        public delegate void EnemyDeadEventHandler(object source, EnemyDeadEventArgs args);
+        public event EnemyDeadEventHandler EnemyDeadEvent;
 
         protected virtual void Awake()
         {
@@ -48,6 +49,8 @@ namespace FPSDemo.Scripts.Enemy
         private void Start()
         {
             LevelManager.Manager.ChangeLevelEv += AutoDeath;
+            EnemyDeadEvent += PickUpManager.manager.OnEnemyDeath;
+            EnemyDeadEvent += ScoreManager.manager.ScoreIncrease;
         }
 
         /// <summary>
@@ -74,13 +77,13 @@ namespace FPSDemo.Scripts.Enemy
         {
             isDead = true;
             anim.SetTrigger("Dead");
-            enemyAudioEffects.PlayOneShot(deathClip);
             this.LeavePhysicWorld();
-            ScoreManager.manager.ScoreIncrease(Convert.ToInt32(ScoreValue * ScoreManager.manager.scoreMultiplier));
-            ScoreManager.manager.enemyKilled++;
+            EnemyDeadEvent.Invoke(this, new EnemyDeadEventArgs(this.ScoreValue, transform.position));
             LevelManager.Manager.UpdateNumberOfEnemiesPerPrefab(spawnIndex);
 
         }
+
+        
 
         /// <summary>
         /// AutoDeath - it happens at a level change
@@ -89,8 +92,8 @@ namespace FPSDemo.Scripts.Enemy
         {
             if(!this.IsDead())
             {
-                isDead = true;
                 this.CurrentHealth = 0;
+                isDead = true;
                 anim.SetTrigger("Dead");
                 this.LeavePhysicWorld();
                 LevelManager.Manager.UpdateNumberOfEnemiesPerPrefab(spawnIndex);
@@ -117,6 +120,29 @@ namespace FPSDemo.Scripts.Enemy
         public bool IsDead()
         {
             return isDead;
+        }
+    }
+
+    public class EnemyDeadEventArgs
+    {
+        private int scoreValue;
+        public int ScoreValue
+        {
+            get { return scoreValue; }
+            set { this.scoreValue = value; }
+        }
+
+        private Vector3 deathPosition;
+        public Vector3 DeathPosition
+        {
+            get { return deathPosition; }
+            set { this.deathPosition = value; }
+        }
+
+        public EnemyDeadEventArgs(int scoreValue, Vector3 deathPosition)
+        {
+            this.scoreValue = scoreValue;
+            this.deathPosition = deathPosition;
         }
     }
 }

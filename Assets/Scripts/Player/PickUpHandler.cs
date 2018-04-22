@@ -9,6 +9,7 @@ namespace FPSDemo.Scripts.Player
     public class PickUpHandler : MonoBehaviour
     {
         MyFirstPersonController controller;
+        HealthController healthController;
 
         //Weapons
         [Header("Weapons")]
@@ -22,7 +23,9 @@ namespace FPSDemo.Scripts.Player
         Frizzy frizzy;
         [Header("Sound")]
         [SerializeField]
-        AudioClip pickedUpAmmo;
+        private AudioClip pickedUpAmmo;
+        [SerializeField]
+        private AudioClip pickedUpHealth;
 
         AudioSource audioSource;
         
@@ -30,6 +33,7 @@ namespace FPSDemo.Scripts.Player
         void Start()
         {
             controller = this.GetComponent<MyFirstPersonController>();
+            healthController = this.GetComponent<HealthController>();
             gun = this.GetComponentInChildren<Gun>();
             rifle = this.GetComponentInChildren<Rifle>();
             shotgun = this.GetComponentInChildren<Shotgun>();
@@ -37,48 +41,43 @@ namespace FPSDemo.Scripts.Player
             audioSource = this.GetComponents<AudioSource>()[1];
         }
 
-        private void AmmoPicked(GameObject ammoPicked, bool isFrizzy = false)
+        private void PickUpPicked(GameObject pickUpPicked, bool isHealth = false)
         {
-            audioSource.PlayOneShot(pickedUpAmmo);
-            if(!isFrizzy)
-                ammoPicked.GetComponent<PickUp>().RaisePickUpEvent();
-            Destroy(ammoPicked);
+            if (!isHealth)
+                audioSource.PlayOneShot(pickedUpAmmo);
+            else
+                audioSource.PlayOneShot(pickedUpHealth);
+            pickUpPicked.GetComponent<PickUp>().RaisePickUpEvent();
+            Destroy(pickUpPicked);
         }
 
         private void OnTriggerEnter(Collider collider)
         {
             GameObject pickUpHit = collider.gameObject;
-            if (pickUpHit.CompareTag("SprintPickUp"))
+            if (pickUpHit.CompareTag("HealthPickUp"))
             {
-                if (controller.dodgeLeft < controller.dodgeMax)
-                {
-                    controller.IncreaseDodgeLeft();
-                    GameObject.Destroy(pickUpHit);
-                }
-
-
-            } else if (pickUpHit.CompareTag("AmmoGunPickUp"))
+                healthController.RechargeHealth(Mathf.FloorToInt(healthController.startingHealth / 2f));
+                PickUpPicked(pickUpHit, true);
+            }
+            else if (pickUpHit.CompareTag("AmmoGunPickUp"))
             {
                 gun.RefillAmmo();
-                AmmoPicked(pickUpHit);
-
-
+                PickUpPicked(pickUpHit);
             } else if (pickUpHit.CompareTag("AmmoShotgunPickUp"))
             {
                 shotgun.RefillAmmo();
-                AmmoPicked(pickUpHit);
+                PickUpPicked(pickUpHit);
 
             } else if (pickUpHit.CompareTag("AmmoRiflePickUp"))
             {
                 rifle.RefillAmmo();
-                AmmoPicked(pickUpHit);
+                PickUpPicked(pickUpHit);
 
             } else if (pickUpHit.CompareTag("AmmoFrizzyPickUp"))
             {
                 frizzy.RefillAmmo();
-                AmmoPicked(pickUpHit, true);
+                PickUpPicked(pickUpHit);
             }
-
         }
     }
 }

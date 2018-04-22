@@ -36,11 +36,8 @@ namespace FPSDemo.Scripts.Enemy.Remy
 
         protected override void Death()
         {
-            isDead = true;
-            anim.SetTrigger("Dead");
+            base.Death();
             enemyAudioEffects.PlayOneShot(deathClips[UnityEngine.Random.Range(0, deathClips.Length - 1)]);
-            ScoreManager.manager.ScoreIncrease(Convert.ToInt32(ScoreValue * ScoreManager.manager.scoreMultiplier));
-            ScoreManager.manager.enemyKilled++;
         }
     }
 }

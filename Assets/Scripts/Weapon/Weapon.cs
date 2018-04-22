@@ -80,6 +80,17 @@ namespace FPSDemo.Scripts.Weapons
         }
 
 
+        private void OnDisable()
+        {
+            //Resetting animator values on weapon switch
+            this.isReloading = false;
+            this.isRunning = false;
+            this.isFuckingAround = false;
+            anim.SetBool("Fuck", isFuckingAround);
+            anim.SetBool("Run", isRunning);
+        }
+
+
         protected void UpdateUI()
         {
             this.AmmoText.text = currentBullets + "/" + bulletsLeft;
@@ -230,7 +241,6 @@ namespace FPSDemo.Scripts.Weapons
             {
                 this.bulletsLeft = refilledBulletsLeft;
             }
-            this.UpdateUI();
         }
     }
 }

@@ -23,12 +23,10 @@ namespace FPSDemo.Scripts.Player
         Vector3 cameraIfDeadPosition;
         [SerializeField]
         GameObject toDestroyIfDie;
-
-        //public Slider healthSlider;
         [SerializeField]
         private Image damageImage;
         [SerializeField]
-        private RawImage healthImage;
+        Slider healthSlider;
         private bool damaged;
         [SerializeField]
         public AudioClip[] deathClip;
@@ -46,6 +44,12 @@ namespace FPSDemo.Scripts.Player
             currentHealth = startingHealth;
             audioSource = this.GetComponents<AudioSource>()[1];
 
+        }
+
+        private void Start()
+        {
+            healthSlider.maxValue = startingHealth;
+            healthSlider.value = startingHealth;
         }
 
 
@@ -66,9 +70,7 @@ namespace FPSDemo.Scripts.Player
         public void TakeDamage(int amount)
         {
             currentHealth -= amount;
-            var tempColor = healthImage.color;
-            tempColor.a = tempColor.a - amount / (float)startingHealth;
-            healthImage.color = tempColor;
+            healthSlider.value = currentHealth;
             damaged = true;
             ScoreManager.manager.playerWasDamaged = true;
             if (currentHealth <= 0 && !isDead)
@@ -93,6 +95,13 @@ namespace FPSDemo.Scripts.Player
             isBeingCharged = true;
             displacementPosition = transform.position + new Vector3(0, 5, 0);
             TakeDamage(damage);
+        }
+
+        public void RechargeHealth(int amount)
+        {
+            if (currentHealth <= startingHealth)
+                currentHealth += Mathf.Clamp(amount,0,startingHealth);
+            healthSlider.value = currentHealth;
         }
 
         private void FixedUpdate()

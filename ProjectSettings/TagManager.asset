@@ -17,6 +17,7 @@ TagManager:
   - AmmoGunPickUp
   - AmmoFrizzyPickUp
   - AmmoRiflePickUp
+  - HealthPickUp
   layers:
   - Default
   - TransparentFX
