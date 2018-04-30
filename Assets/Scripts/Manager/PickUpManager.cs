@@ -95,7 +95,7 @@ namespace FPSDemo.Scripts.Manager
                 spawned[pickUpIndex] = false;
             } else
             {
-                if (args.PickUpTag == "HealthTag")
+                if (args.PickUpTag == "HealthPickUp")
                     isHealthSpawned = false;
                 else if (args.PickUpTag == "AmmoFrizzyPickUp")
                     isZapSpawned = false;
@@ -234,6 +234,7 @@ namespace FPSDemo.Scripts.Manager
             GameObject.Instantiate(healthPickUpPrefab,
                     position + new Vector3(0, 1, 0),
                     Quaternion.identity);
+            healthPickUpPrefab.GetComponent<PickUp>().ManagerIndexTracker = -1;
         }
 
         /// <summary>

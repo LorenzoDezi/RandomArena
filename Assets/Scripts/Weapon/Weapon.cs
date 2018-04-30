@@ -86,8 +86,11 @@ namespace FPSDemo.Scripts.Weapons
             this.isReloading = false;
             this.isRunning = false;
             this.isFuckingAround = false;
-            anim.SetBool("Fuck", isFuckingAround);
-            anim.SetBool("Run", isRunning);
+            if(anim != null)
+            {
+                anim.SetBool("Fuck", isFuckingAround);
+                anim.SetBool("Run", isRunning);
+            }
         }
 
 
@@ -101,7 +104,7 @@ namespace FPSDemo.Scripts.Weapons
             anim.SetBool("Fuck", false);
             if (isFuckingAroundAtSomeone)
             {
-                ScoreManager.manager.ScoreIncrease(Convert.ToInt32(20 * ScoreManager.manager.scoreMultiplier));
+                ScoreManager.manager.IncreaseMultiplier();
                 isFuckingAroundAtSomeone = false;
             }
         }
@@ -153,12 +156,9 @@ namespace FPSDemo.Scripts.Weapons
             {
                 RaycastHit hit;
                 //You're insulting someone
-                if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, range))
+                if (Physics.SphereCast(shootPoint.position, 5f, shootPoint.transform.forward, out hit, range))
                 {
-                    if (hit.transform.tag.Contains("Enemy"))
-                    {
-                        isFuckingAroundAtSomeone = false;
-                    }
+                    isFuckingAroundAtSomeone = hit.transform.tag.Contains("Enemy");
                 }
                 else
                 {

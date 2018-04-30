@@ -8,8 +8,9 @@ namespace FPSDemo.Scripts.Enemy.Remy
 {
     public class RemyMovement : EnemyMovement
     {
-
+        [HideInInspector]
         public bool isAttacking;
+        [HideInInspector]
         public bool hasAttacked;
         bool isRunningOut;
         Vector3 runDestination;
@@ -17,6 +18,7 @@ namespace FPSDemo.Scripts.Enemy.Remy
         Transform playerTransform;
         //the distance of the point to run to after the attack
         [SerializeField]
+        [Tooltip("The distance of the point at which run after the attack")]
         float distanceToRun;
 
         protected override void Start()

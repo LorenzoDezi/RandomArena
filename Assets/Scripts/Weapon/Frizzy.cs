@@ -45,7 +45,7 @@ namespace FPSDemo.Scripts.Weapons
                     hit.transform.gameObject.GetComponent<EnemyHealth>().ReceiveShock();
 
                 }
-                else
+                else if (hit.transform.tag.Contains("Environment"))
                 {
                     //TODO: Vedere bene cosa spawnare quando il tuono impatta sui colliders
                     //GameObject shotParticleSpawn = GameObject.Instantiate(shotParticle, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal));
@@ -122,12 +122,9 @@ namespace FPSDemo.Scripts.Weapons
             if (isFuckingAround)
             {
                 RaycastHit hit;
-                if (Physics.Raycast(shootPoint.position, shootPoint.transform.forward, out hit, range))
+                if (Physics.SphereCast(shootPoint.position, 5f, shootPoint.transform.forward, out hit, range))
                 {
-                    if (hit.transform.tag != "Enemy")
-                    {
-                        isFuckingAroundAtSomeone = false;
-                    }
+                    isFuckingAroundAtSomeone = hit.transform.tag == "Enemy";
                 }
                 else
                 {

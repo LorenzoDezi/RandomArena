@@ -6,6 +6,7 @@ namespace FPSDemo.Scripts.Enemy.MocapGuy
 {
     public class MocapGuyHealth : EnemyHealth
     {
+        public static int SpawnIndex = 0;
         public override void TakeDamage(int amount, Vector3 hitPoint, bool isShocked = false)
         {
             if (isDead)
@@ -16,7 +17,8 @@ namespace FPSDemo.Scripts.Enemy.MocapGuy
                 enemyAudioEffects.PlayOneShot(damageClip, 0.5f);
             if (!isShocked)
             {
-                ParticleSystem bloodSplat = GameObject.Instantiate(this.bloodSplat, hitPoint, Quaternion.FromToRotation(hitPoint.normalized, Vector3.right));
+                ParticleSystem bloodSplat = GameObject.Instantiate(this.bloodSplat, hitPoint, 
+                    Quaternion.FromToRotation(hitPoint.normalized, Vector3.right), this.transform);
                 bloodSplat.Play();
                 Destroy(bloodSplat.gameObject, 2f);
             }

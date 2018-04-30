@@ -26,6 +26,8 @@ namespace FPSDemo.Scripts.Player
         [SerializeField]
         private Image damageImage;
         [SerializeField]
+        private GameObject damagedPanel;
+        [SerializeField]
         Slider healthSlider;
         private bool damaged;
         [SerializeField]
@@ -73,6 +75,10 @@ namespace FPSDemo.Scripts.Player
             healthSlider.value = currentHealth;
             damaged = true;
             ScoreManager.manager.playerWasDamaged = true;
+            if(currentHealth <= startingHealth / 4f)
+            {
+                damagedPanel.SetActive(true);
+            }
             if (currentHealth <= 0 && !isDead)
             {
                 Death();
@@ -100,7 +106,9 @@ namespace FPSDemo.Scripts.Player
         public void RechargeHealth(int amount)
         {
             if (currentHealth <= startingHealth)
-                currentHealth += Mathf.Clamp(amount,0,startingHealth);
+                currentHealth += Mathf.Clamp(amount,0,startingHealth - currentHealth);
+            if (currentHealth > startingHealth / 4f)
+                damagedPanel.SetActive(false);
             healthSlider.value = currentHealth;
         }
 

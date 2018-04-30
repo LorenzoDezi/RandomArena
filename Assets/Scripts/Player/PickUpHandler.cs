@@ -56,7 +56,7 @@ namespace FPSDemo.Scripts.Player
             GameObject pickUpHit = collider.gameObject;
             if (pickUpHit.CompareTag("HealthPickUp"))
             {
-                healthController.RechargeHealth(Mathf.FloorToInt(healthController.startingHealth / 2f));
+                healthController.RechargeHealth(Mathf.FloorToInt(healthController.startingHealth / 3f));
                 PickUpPicked(pickUpHit, true);
             }
             else if (pickUpHit.CompareTag("AmmoGunPickUp"))

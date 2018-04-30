@@ -11,6 +11,8 @@ namespace FPSDemo.Scripts.Enemy.Limana
         //This is to fix the shittiness of our resources
         private AudioSource enemyAudioEffectWithout3dBlend;
 
+        public static int SpawnIndex = 1;
+
         protected override void Awake()
         {
             enemyAudioEffectWithout3dBlend = this.GetComponents<AudioSource>()[1];
@@ -26,7 +28,8 @@ namespace FPSDemo.Scripts.Enemy.Limana
             enemyAudioEffectWithout3dBlend.PlayOneShot(damageClip, 1f);
 
             CurrentHealth -= amount;
-            ParticleSystem bloodSplatInstance = GameObject.Instantiate(this.bloodSplat, hitPoint, Quaternion.FromToRotation(hitPoint.normalized, Vector3.right));
+            ParticleSystem bloodSplatInstance = GameObject.Instantiate(this.bloodSplat, hitPoint, 
+                Quaternion.FromToRotation(hitPoint.normalized, Vector3.right), this.transform);
             bloodSplatInstance.Play();
             Destroy(bloodSplatInstance.gameObject, 2f);
 

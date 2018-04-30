@@ -9,7 +9,7 @@ namespace FPSDemo.Scripts.UI
     public class PauseMenuLogic : MonoBehaviour
     {
 
-        public static bool isPaused = false;
+        public static bool isPaused;
 
         [SerializeField]
         GameObject pauseMenu;
@@ -21,6 +21,7 @@ namespace FPSDemo.Scripts.UI
 	void Start()
         {
             pauseMenu.SetActive(false);
+            isPaused = false;
         }
 
         void Update()
@@ -58,6 +59,7 @@ namespace FPSDemo.Scripts.UI
 
         public void Exit()
         {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(0, LoadSceneMode.Single);
         }
     }

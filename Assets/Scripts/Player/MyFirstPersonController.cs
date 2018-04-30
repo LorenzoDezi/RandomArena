@@ -202,14 +202,6 @@ namespace FPSDemo.Scripts.Player
             GetInput(out speed);
             if (enabled)
             {
-                if (m_Dodge && (m_Input != Vector2.zero) && dodgeLeft > 0)
-                {
-                    GetComponents<AudioSource>()[1].PlayOneShot(m_DodgeSound);
-                    DecreaseDodgeLeft();
-                    //When you use a dodge, the recharge restarts slow
-                    RecoverDodgeTimer = 0f;
-
-                }
                 // always move along the camera forward as it is the direction that it being aimed at
                 Vector3 desiredMove = transform.forward * m_Input.y + transform.right * m_Input.x;
 
@@ -220,9 +212,13 @@ namespace FPSDemo.Scripts.Player
 
                 desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
                 //Simple increase of movement speed if dodge
-                if (m_Dodge)
+                if (m_Dodge && (m_Input != Vector2.zero) && dodgeLeft > 0)
                 {
                     desiredMove = desiredMove * m_dodgeIncreaseSpeed;
+                    GetComponents<AudioSource>()[1].PlayOneShot(m_DodgeSound);
+                    DecreaseDodgeLeft();
+                    //When you use a dodge, the recharge restarts slow
+                    RecoverDodgeTimer = 0f;
                 }
                 m_MoveDir.x = desiredMove.x * speed;
                 m_MoveDir.z = desiredMove.z * speed;

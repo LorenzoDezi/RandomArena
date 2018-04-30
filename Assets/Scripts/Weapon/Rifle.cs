@@ -37,7 +37,7 @@ namespace FPSDemo.Scripts.Weapons
                 {
                     hit.transform.gameObject.GetComponent<SphereBehaviour>().Destroy();
                 }
-                else
+                else if (hit.transform.tag.Contains("Environment"))
                 {
                     //We make bullet hole and particle
                     GameObject shotParticleSpawn = GameObject.Instantiate(shotParticle, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal));

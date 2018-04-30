@@ -17,7 +17,10 @@ namespace FPSDemo.Scripts.Manager
         //Current number of enemies killed
         public int enemyKilled;
         //Current score multiplier
-        public float scoreMultiplier = 0.5f;
+        [SerializeField]
+        [Tooltip("Starting multiplier value")]
+        private float startingMultiplier = 0.5f;
+        private float scoreMultiplier;
 
         [SerializeField]
         int scoreToReachSecondStage = 500;
@@ -38,16 +41,22 @@ namespace FPSDemo.Scripts.Manager
             { "QuickFucked360", "420BlazeIt", "'Non se sa'", "Ass Breaker", "Suck Your Dick"}
         };
 
+        public static string[] multiplierMessages =
+        {
+            "Go!", "Ass-Whooped", "SuckMyDickInCamelCase", "U Can't See me!"
+        };
+
         [Header("Parameters")]
         [SerializeField]
         Text scoreText;
         [SerializeField]
         static Text scoreMsgText;
         [SerializeField]
+        static Text multiplierMsgText;
+        [SerializeField]
         static Slider scoreSlider;
         [SerializeField]
         float secondsToFullyDecreaseSlider;
-
         static Animator anim;
         Text text;
 
@@ -68,7 +77,8 @@ namespace FPSDemo.Scripts.Manager
             anim = GetComponent<Animator>();
             scoreMsgText = GameObject.Find("ScoreText").GetComponent<Text>();
             scoreSlider = GameObject.Find("ScoreSlider").GetComponent<Slider>();
-
+            multiplierMsgText = GameObject.Find("MultiplierText").GetComponent<Text>();
+            scoreMultiplier = startingMultiplier;
             enemyKilled = 0;
         }
 
@@ -78,14 +88,14 @@ namespace FPSDemo.Scripts.Manager
             scoreText.text = score + "";
             if (scoreSlider.value >= 0)
             {
-                scoreSlider.value -= Time.deltaTime * scoreSlider.maxValue / secondsToFullyDecreaseSlider * scoreMultiplier;
+                scoreSlider.value -= Time.deltaTime * scoreSlider.maxValue / secondsToFullyDecreaseSlider;
             }
             if (playerWasDamaged)
             {
                 scoreSlider.value = 0;
                 playerWasDamaged = false;
+                scoreMultiplier = startingMultiplier;
             }
-            scoreMultiplier = 0.5f + scoreSlider.value / scoreSlider.maxValue;
 
             //Stage change handling
             //Try something better than this shitty code
@@ -99,29 +109,42 @@ namespace FPSDemo.Scripts.Manager
                 LevelManager.Manager.ChangeLevel();
                 hasChangedLevel = false;
             }
+        }
 
+        internal void IncreaseMultiplier()
+        {
+            scoreMultiplier += startingMultiplier;
+            UpdateUIMultiplier();
         }
 
         public void ScoreIncrease(object source, EnemyDeadEventArgs args)
         {
             ScoreManager.manager.enemyKilled++;
-            ScoreManager.manager.score += args.ScoreValue;
+            scoreMultiplier += scoreSlider.value / scoreSlider.maxValue;
+            ScoreManager.manager.score += Convert.ToInt32(args.ScoreValue * scoreMultiplier);
             UpdateUI(args.ScoreValue);
         }
 
         public void ScoreIncrease(int scoreToIncrease)
         {
-            ScoreManager.manager.score += scoreToIncrease;
+            ScoreManager.manager.score += Convert.ToInt32(scoreToIncrease * scoreMultiplier);
             UpdateUI(scoreToIncrease);
         }
 
         private void UpdateUI(int score)
         {
             int messagesIndex = Convert.ToInt32(scoreSlider.value / scoreSlider.maxValue * 3f);
-            scoreMsgText.text = scoreMessages[messagesIndex, UnityEngine.Random.Range(0, 4)];
+            scoreMsgText.text = scoreMessages[messagesIndex, UnityEngine.Random.Range(0, 5)];
             if (scoreSlider.value <= scoreSlider.maxValue - score)
                 scoreSlider.value += score;
             anim.SetTrigger("ScoreIncrease");
+        }
+
+        private void UpdateUIMultiplier()
+        {
+            int messagesIndex = Convert.ToInt32(UnityEngine.Random.Range(0, multiplierMessages.Length));
+            multiplierMsgText.text = multiplierMessages[messagesIndex] + "x" + scoreMultiplier.ToString("n1");
+            anim.SetTrigger("MultiplierIncrease");
         }
 
         

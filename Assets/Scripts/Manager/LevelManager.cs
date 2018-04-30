@@ -5,6 +5,11 @@ using FPSDemo.Scripts.Enemy;
 using System.Linq;
 using System;
 using UnityEngine.AI;
+using FPSDemo.Scripts.Enemy.MocapGuy;
+using FPSDemo.Scripts.Enemy.Limana;
+using FPSDemo.Scripts.Enemy.Zombie;
+using FPSDemo.Scripts.Enemy.Spider;
+using FPSDemo.Scripts.Enemy.Remy;
 
 namespace FPSDemo.Scripts.Manager
 {
@@ -33,13 +38,26 @@ namespace FPSDemo.Scripts.Manager
         [SerializeField]
         Animation[] doorAnimations;
 
+
+
         [Header("Enemies to spawn and parameters")]
         //Enemy prefabs to spawn
         [SerializeField]
+        GameObject spiderPrefab;
+        [SerializeField]
+        GameObject mocapPrefab;
+        [SerializeField]
+        GameObject limanaPrefab;
+        [SerializeField]
+        GameObject remyPrefab;
+        [SerializeField]
+        GameObject zombiePrefab;
+
+        [HideInInspector]
         public GameObject[] enemyPrefabs;
-        [SerializeField]
+        [HideInInspector]
         public int[] maxEnemiesPerPrefab;
-        [SerializeField]
+        [HideInInspector]
         public int[] currentEnemiesPerPrefab;
 
         //Change level event, every enemy is linked to this event.
@@ -60,17 +78,19 @@ namespace FPSDemo.Scripts.Manager
             }
 
             teleports = teleportContainer.GetComponentsInChildren<EnemyTeleport>();
+            this.InitializeEnemyPrefabs();
+            ChangeMaxNumberOfEnemies(this.CurrentStage);
+        }
 
-            //Setting enemies spawn parameters
-            if(enemyPrefabs.Length != maxEnemiesPerPrefab.Length)
-            {
-                Debug.LogError("enemyPrefabs length must be the same of maxEnemiesPerPrefab!");
-            }
-
-            currentEnemiesPerPrefab = new int[enemyPrefabs.Length];
-            for(int i=0; i < enemyPrefabs.Length; i++) {
-                currentEnemiesPerPrefab[i] = 0;
-            }
+        private void InitializeEnemyPrefabs()
+        {
+            this.enemyPrefabs = new GameObject[5];
+            this.enemyPrefabs[MocapGuyHealth.SpawnIndex] = mocapPrefab;
+            this.enemyPrefabs[LimanaHealth.SpawnIndex] = limanaPrefab;
+            this.enemyPrefabs[RemyHealth.SpawnIndex] = remyPrefab;
+            this.enemyPrefabs[ZombieHealth.SpawnIndex] = zombiePrefab;
+            this.enemyPrefabs[SpiderHealth.SpawnIndex] = spiderPrefab;
+            this.currentEnemiesPerPrefab = new int[5] { 0, 0, 0, 0, 0 };
         }
 
         private void Start()
@@ -112,7 +132,7 @@ namespace FPSDemo.Scripts.Manager
                 teleport.Deactivate();
             }
             CurrentStage++;
-            //Hardcoding door animations
+            this.ChangeMaxNumberOfEnemies(this.CurrentStage);
             if (CurrentStage == 2)
             {
                 Vector3 healthSpawnPosition = doorAnimations[0].transform.position;
@@ -130,6 +150,34 @@ namespace FPSDemo.Scripts.Manager
                 this.NavMeshIndex = NavMesh.GetAreaFromName("Phase3");
             }
 
+        }
+
+        private void ChangeMaxNumberOfEnemies(int currentStage)
+        {
+            switch(currentStage)
+            {
+                case 1:
+                    this.maxEnemiesPerPrefab[SpiderHealth.SpawnIndex] = 25;
+                    this.maxEnemiesPerPrefab[MocapGuyHealth.SpawnIndex] = 5;
+                    this.maxEnemiesPerPrefab[RemyHealth.SpawnIndex] = 0;
+                    this.maxEnemiesPerPrefab[LimanaHealth.SpawnIndex] = 0;
+                    this.maxEnemiesPerPrefab[ZombieHealth.SpawnIndex] = 0;
+                    break;
+                case 2:
+                    this.maxEnemiesPerPrefab[SpiderHealth.SpawnIndex] = 15;
+                    this.maxEnemiesPerPrefab[MocapGuyHealth.SpawnIndex] = 5;
+                    this.maxEnemiesPerPrefab[RemyHealth.SpawnIndex] = 3;
+                    this.maxEnemiesPerPrefab[LimanaHealth.SpawnIndex] = 0;
+                    this.maxEnemiesPerPrefab[ZombieHealth.SpawnIndex] = 15;
+                    break;
+                case 3:
+                    this.maxEnemiesPerPrefab[SpiderHealth.SpawnIndex] = 15;
+                    this.maxEnemiesPerPrefab[MocapGuyHealth.SpawnIndex] = 5;
+                    this.maxEnemiesPerPrefab[RemyHealth.SpawnIndex] = 3;
+                    this.maxEnemiesPerPrefab[LimanaHealth.SpawnIndex] = 2;
+                    this.maxEnemiesPerPrefab[ZombieHealth.SpawnIndex] = 15;
+                    break;
+            }
         }
 
         /// <summary>

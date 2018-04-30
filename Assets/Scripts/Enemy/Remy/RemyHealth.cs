@@ -12,6 +12,8 @@ namespace FPSDemo.Scripts.Enemy.Remy
         [SerializeField]
         private AudioClip[] deathClips;
 
+        public static int SpawnIndex = 2;
+
         public override void TakeDamage(int amount, Vector3 hitPoint, Boolean isShocked)
         {
             if (isDead)
@@ -23,7 +25,8 @@ namespace FPSDemo.Scripts.Enemy.Remy
                 enemyAudioEffects.PlayOneShot(damageClip, 0.5f);
             if (!isShocked)
             {
-                ParticleSystem bloodSplat = GameObject.Instantiate(this.bloodSplat, hitPoint, Quaternion.FromToRotation(hitPoint.normalized, Vector3.right));
+                ParticleSystem bloodSplat = GameObject.Instantiate(this.bloodSplat, hitPoint, 
+                    Quaternion.FromToRotation(hitPoint.normalized, Vector3.right), this.transform);
                 bloodSplat.Play();
                 Destroy(bloodSplat.gameObject, 2f);
             }
