@@ -94,6 +94,8 @@ namespace FPSDemo.Scripts.Weapons
 
         protected override void FixedUpdate()
         {
+            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+            isFuckingAround = info.IsName("FuckingAround");
             shotInput = Input.GetButton("Fire");
             anim.SetBool("Fire", shotInput);
             if (currentBullets <= 0)

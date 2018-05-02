@@ -48,6 +48,12 @@ namespace FPSDemo.Scripts.UI
             Cursor.lockState = CursorLockMode.Locked;
         }
 
+        public void Restart()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(1, LoadSceneMode.Single);
+        }
+
         public void Pause()
         {
             pauseMenu.SetActive(true);

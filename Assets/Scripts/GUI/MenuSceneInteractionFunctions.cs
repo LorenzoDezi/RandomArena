@@ -68,6 +68,14 @@ namespace FPSDemo.Scripts.UI
         }
 
         /// <summary>
+        /// Close the application
+        /// </summary>
+        public void CloseApplication()
+        {
+            Application.Quit();
+        }
+
+        /// <summary>
         /// Loads the help panel
         /// </summary>
         public void LoadHelpPanel()
